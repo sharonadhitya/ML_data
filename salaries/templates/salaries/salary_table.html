@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>ML Engineer Salaries</title>
+</head>
+<body>
+    <div class="container mx-auto mt-10">
+        <h1 class="text-2xl font-bold mb-4">ML Engineer Salaries</h1>
+        <table class="table-auto w-full mb-8">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">
+                        <a href="?sort_by=year&order={% if sort_by == 'year' and order == 'asc' %}desc{% else %}asc{% endif %}">
+                            Year
+                            {% if sort_by == 'year' %}
+                                {% if order == 'asc' %}
+                                    &uarr;
+                                {% else %}
+                                    &darr;
+                                {% endif %}
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="px-4 py-2">
+                        <a href="?sort_by=total_jobs&order={% if sort_by == 'total_jobs' and order == 'asc' %}desc{% else %}asc{% endif %}">
+                            Number of Total Jobs
+                            {% if sort_by == 'total_jobs' %}
+                                {% if order == 'asc' %}
+                                    &uarr;
+                                {% else %}
+                                    &darr;
+                                {% endif %}
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th class="px-4 py-2">
+                        <a href="?sort_by=average_salary&order={% if sort_by == 'average_salary' and order == 'asc' %}desc{% else %}asc{% endif %}">
+                            Average Salary (USD)
+                            {% if sort_by == 'average_salary' %}
+                                {% if order == 'asc' %}
+                                    &uarr;
+                                {% else %}
+                                    &darr;
+                                {% endif %}
+                            {% endif %}
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr class="hover:bg-gray-200 cursor-pointer" onclick="location.href='{{ row.year }}'">
+                    <td class="border px-4 py-2"><a href="{% url 'job_titles' row.year %}">{{ row.year }}</a></td>
+                    <td class="border px-4 py-2">{{ row.total_jobs }}</td>
+                    <td class="border px-4 py-2">{{ row.average_salary|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Line Chart -->
+        <div class="w-full">
+            <canvas id="jobsLineChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('jobsLineChart').getContext('2d');
+        const jobsLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ years|safe }},
+                datasets: [{
+                    label: 'Total Jobs',
+                    data: {{ total_jobs|safe }},
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total Jobs'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

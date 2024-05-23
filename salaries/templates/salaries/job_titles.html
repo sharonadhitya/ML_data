@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Job Titles in {{ year }}</title>
+</head>
+<body>
+    <div class="container mx-auto mt-10">
+        <h1 class="text-2xl font-bold mb-4">Job Titles in {{ year }}</h1>
+        <table class="table-auto w-full">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Job Title</th>
+                    <th class="px-4 py-2">Number of Jobs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in job_data %}
+                <tr>
+                    <td class="border px-4 py-2">{{ row.job_title }}</td>
+                    <td class="border px-4 py-2">{{ row.count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'salary_table' %}" class="mt-4 inline-block text-blue-500">Back to Main Table</a>
+    </div>
+</body>
+</html>
